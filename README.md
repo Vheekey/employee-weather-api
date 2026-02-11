@@ -19,7 +19,7 @@ A Spring Boot service that fetches weather data and exposes a simple REST API fo
 ### Configure
 The service reads Weather API configuration from `application.properties` or environment variables.
 
-- File: `/Users/vheekey/Sites/Java Workspace/employee-weather-api/src/main/resources/application.properties`
+- File: `/employee-weather-api/src/main/resources/application.properties`
 - Env override example: `WEATHER_API_KEY` maps to `weather.api.key`
 
 Required properties:
@@ -52,7 +52,7 @@ curl http://localhost:9091/api/v1/weather/current/London
 If you want open access locally, add a `SecurityFilterChain` to permit `/api/**` or remove the dependency.
 
 ## API Docs
-See `/Users/vheekey/Sites/Java Workspace/employee-weather-api/docs/API.md`.
+See `/employee-weather-api/docs/API.md`.
 
 ## Project Layout
 - `src/main/java/com/example/employee_weather_api/weather` weather feature
