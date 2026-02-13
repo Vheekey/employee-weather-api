@@ -22,4 +22,11 @@ public class WeatherController {
 
         return ResponseEntity.ok().body(response);
     }
+
+    @GetMapping("/forecast/{location}")
+    public ResponseEntity<WeatherSummary> getWeatherForecast(@PathVariable String location) {
+        WeatherSummary response = weatherService.getWeatherForecast(location);
+
+        return ResponseEntity.ok().body(response);
+    }
 }
