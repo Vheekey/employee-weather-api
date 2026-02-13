@@ -45,6 +45,7 @@ class WeatherApiClientTest {
 			  "current": { "temp_c": 7.1 }
 			}
 			""";
+		double expectedCurrentTemperature = 7.1;
 
 		String expectedUrl = properties.getBaseUrl()
 				+ properties.getCurrent()
@@ -57,8 +58,34 @@ class WeatherApiClientTest {
 
 		WeatherTemperatureResponse body = client.getCurrent(location);
 
-		assertThat(body.getLocation().getName()).isEqualTo("London");
-		assertThat(body.getCurrent().getTempC()).isEqualTo(7.1);
+		assertThat(body.getLocation().getName()).isEqualTo(location);
+		assertThat(body.getCurrent().getTempC()).isEqualTo(expectedCurrentTemperature);
+		server.verify();
+	}
+
+	@Test
+	void getForecastWeather_usesConfigAndReturnsResult() {
+		String location = "Stockholm";
+		String json = """
+                 {
+                 "location": { "name": "Stockholm" },
+                 "current": { "temp_c": 7.1 }
+                 }
+                """;
+		double expectedTempC = 7.1;
+
+		String expectedUrl = properties.getBaseUrl()
+				+ properties.getForecast()
+				+ "?key=" + properties.getKey()
+				+ "&q=" + location;
+		server.expect(requestTo(expectedUrl))
+				.andExpect(method(HttpMethod.GET))
+				.andRespond(withSuccess(json, MediaType.APPLICATION_JSON));
+
+		WeatherTemperatureResponse body = client.getForecast(location);
+		assertThat(body.getLocation().getName()).isEqualTo(location);
+		assertThat(body.getCurrent().getTempC()).isEqualTo(expectedTempC);
+
 		server.verify();
 	}
 }
