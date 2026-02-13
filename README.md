@@ -44,6 +44,16 @@ curl http://localhost:9091/api/v1/weather/current/London
 ./mvnw -DskipTests compile
 ```
 
+## Testing
+- Unit tests only:
+```bash
+./mvnw test
+```
+- Integration tests (includes real Weather API call):
+```bash
+./mvnw verify
+```
+
 ## Security
 `spring-boot-starter-security` is on the classpath. By default, Spring secures all endpoints and uses basic auth.
 - Username: `user`
