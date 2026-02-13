@@ -13,15 +13,36 @@ public class WeatherService {
 	}
 
 	public WeatherSummary getCurrentWeather(String location) {
+		this.validateLocation(location);
+
+		WeatherTemperatureResponse response = weatherApiClient.getCurrent(location);
+		this.validateWeatherResponse(response);
+
+		return this.getWeatherSummary(response);
+	}
+
+	public WeatherSummary getWeatherForecast(String location) {
+		this.validateLocation(location);
+
+		WeatherTemperatureResponse response = weatherApiClient.getForecast(location);
+		this.validateWeatherResponse(response);
+
+		return this.getWeatherSummary(response);
+	}
+
+	private void validateLocation(String location) {
 		if (location == null || location.isBlank()) {
 			throw new IllegalArgumentException("location is required");
 		}
+	}
 
-		WeatherTemperatureResponse response = weatherApiClient.getCurrent(location);
+	private void validateWeatherResponse(WeatherTemperatureResponse response) {
 		if (response == null || response.getLocation() == null || response.getCurrent() == null) {
 			throw new IllegalStateException("weather response missing required data");
 		}
+	}
 
+	private WeatherSummary getWeatherSummary(WeatherTemperatureResponse response) {
 		return new WeatherSummary(
 				response.getLocation().getName(),
 				response.getCurrent().getTempC());

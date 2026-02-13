@@ -20,4 +20,12 @@ public class WeatherApiClient {
 				+ "?key={key}&q={q}";
 		return restTemplate.getForObject(url, WeatherTemperatureResponse.class, properties.getKey(), location);
 	}
+
+	public WeatherTemperatureResponse getForecast(String location) {
+		String url = properties.getBaseUrl()
+				+ properties.getForecast()
+				+ "?key={key}&q={q}";
+
+		return restTemplate.getForObject(url, WeatherTemperatureResponse.class,  properties.getKey(), location);
+	}
 }
