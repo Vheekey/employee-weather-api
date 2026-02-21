@@ -66,6 +66,8 @@ Error responses now use a shared format:
 ./mvnw verify
 ```
 
+Tests run with an in-memory H2 datasource (`src/test/resources/application.properties`) so local PostgreSQL is not required for test execution.
+
 ## Security
 `spring-boot-starter-security` is on the classpath. By default, Spring secures all endpoints and uses basic auth.
 - Username: `user`
