@@ -3,7 +3,8 @@
 A Spring Boot service that fetches weather data and exposes a simple REST API for employee-facing use cases.
 
 ## Status
-- Implemented: current weather summary endpoint.
+- Implemented: current weather, forecast weather, and history weather endpoints.
+- Implemented: global exception handling with a consistent JSON error response body.
 - Planned: additional employee and sentiment APIs (see API docs).
 
 ## Requirements
@@ -35,6 +36,17 @@ Required properties:
 ### Call the API
 ```bash
 curl http://localhost:9091/api/v1/weather/current/London
+```
+
+Error responses now use a shared format:
+```json
+{
+  "timestamp": "2026-02-20T18:42:10.911Z",
+  "status": 400,
+  "error": "Bad Request",
+  "message": "days must be greater than 0",
+  "path": "/api/v1/weather/forecast/London/0"
+}
 ```
 
 ## Development Notes

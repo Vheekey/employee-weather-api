@@ -48,8 +48,8 @@ class WeatherIntegrationIT {
 
 		assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
 		assertThat(response.getBody()).isNotNull();
-		assertThat(response.getBody().getLocationName()).isNotBlank();
-		assertThat(response.getBody().getTempC()).isBetween(-80.0, 60.0);
+		assertThat(response.getBody().locationName()).isNotBlank();
+		assertThat(response.getBody().tempC()).isBetween(-80.0, 60.0);
 	}
 
 	@Test
@@ -60,20 +60,35 @@ class WeatherIntegrationIT {
 				"Skipping integration test because weather.api.forecast is not set");
 
 		String location = "Stockholm";
-		String url = getWeatherUrl("forecast", location);
+		String url = getWeatherUrl("forecast", location, 2);
 
 		ResponseEntity<WeatherSummary> response = restTemplate
 				.withBasicAuth("user", "test")
 				.getForEntity(url, WeatherSummary.class);
 
+		ResponseEntity<String> responseDebug = restTemplate
+				.withBasicAuth("user", "test")
+				.getForEntity(url, String.class);
+
 		assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
 		assertThat(response.getBody()).isNotNull();
-		assertThat(response.getBody().getLocationName()).isEqualTo(location);
-		assertThat(response.getBody().getTempC()).isBetween(-80.0, 60.0);
+		System.out.println(response.getBody());
+		assertThat(response.getBody().locationName()).isEqualTo(location);
+		assertThat(response
+				.getBody()
+				.forecastDays()
+				.getFirst()
+				.getHour()
+				.getFirst()
+				.getTempC())
+				.isBetween(-80.0, 60.0);
 	}
 
 	String getWeatherUrl(String type, String location){
 		return "http://localhost:" + port + "/api/v1/weather/" + type + "/" + location;
 	}
 
+	String getWeatherUrl(String type, String location, int days){
+		return "http://localhost:" + port + "/api/v1/weather/" + type + "/" + location + "/" + days;
+	}
 }
