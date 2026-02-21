@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class WeatherServiceTest {
 
 	@Test
-	void getWeatherForecast_usesNextDayAverageTemperatureWhenAvailable() {
+	void getWeatherForecast_returnsForecastDays() {
 		StubWeatherApiClient weatherApiClient = new StubWeatherApiClient();
 		weatherApiClient.forecastResponse = forecastResponse("London", 5.1, 6.5);
 
@@ -24,14 +24,16 @@ class WeatherServiceTest {
 		WeatherSummary summary = service.getWeatherForecast("London", 2);
 
 		assertThat(summary.locationName()).isEqualTo("London");
-		assertThat(summary.tempC()).isEqualTo(6.5);
+		assertThat(summary.tempC()).isNull();
 		assertThat(summary.forecastDays()).hasSize(2);
+		assertThat(summary.forecastDays().get(0).getDay().getAvgTempC()).isEqualTo(5.1);
+		assertThat(summary.forecastDays().get(1).getDay().getAvgTempC()).isEqualTo(6.5);
 		assertThat(weatherApiClient.lastLocation).isEqualTo("London");
 		assertThat(weatherApiClient.lastForecastDays).isEqualTo(2);
 	}
 
 	@Test
-	void getWeatherHistory_usesAverageDailyTemperature() {
+	void getWeatherHistory_returnsHistoryDays() {
 		LocalDate requestedDate = LocalDate.of(2025, 1, 20);
 		StubWeatherApiClient weatherApiClient = new StubWeatherApiClient();
 		weatherApiClient.historyResponse = historyResponse("London", -2.4);
@@ -40,8 +42,9 @@ class WeatherServiceTest {
 		WeatherSummary summary = service.getWeatherHistory("London", requestedDate);
 
 		assertThat(summary.locationName()).isEqualTo("London");
-		assertThat(summary.tempC()).isEqualTo(-2.4);
-		assertThat(summary.forecastDays()).isNull();
+		assertThat(summary.tempC()).isNull();
+		assertThat(summary.forecastDays()).hasSize(1);
+		assertThat(summary.forecastDays().getFirst().getDay().getAvgTempC()).isEqualTo(-2.4);
 		assertThat(weatherApiClient.lastLocation).isEqualTo("London");
 		assertThat(weatherApiClient.lastDate).isEqualTo(requestedDate);
 	}
