@@ -5,6 +5,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class LocationDto {
-	private String name;
+public class WeatherHistoryResponse {
+	private LocationDto location;
+	private ForecastDto forecast;
 }
